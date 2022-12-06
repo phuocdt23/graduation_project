@@ -1,3 +1,4 @@
+import { errorHandler } from './middlewares/error-handler';
 import express from 'express';
 
 import { json } from 'body-parser';
@@ -12,6 +13,10 @@ app.use(currentUserRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
+
+
+//error handling:
+app.use(errorHandler);
 app.listen(3000, () => {
   console.log('Auth listening on port 3000')
 })

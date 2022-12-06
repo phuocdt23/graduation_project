@@ -4,7 +4,7 @@ import { body, validationResult } from 'express-validator';
 const router = express.Router();
 
 
-router.get('/api/users/signup',
+router.post('/api/users/signup',
   [
     body('email')
       .isEmail()
@@ -16,12 +16,16 @@ router.get('/api/users/signup',
   ]
   , (req: Request, res: Response) => {
     const errors = validationResult(req);
-    console.log(errors)
+    console.log(JSON.stringify(errors))
     if (!errors.isEmpty()) {
       return res.status(400).send(errors.array())
     }
     const { email, password } = req.body;
+    console.log('email: ', email);
+    console.log('password: ', password);
+
     console.log('Creating a user...');
+    res.status(200).send({ email, password })
 
   })
 
