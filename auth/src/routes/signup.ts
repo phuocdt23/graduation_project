@@ -4,6 +4,7 @@ import { RequestValidationError } from './../errors/request-validation-error';
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { User } from '../models/user';
+import { validateRequest } from '../middlewares/validate-request';
 
 const router = express.Router();
 
@@ -19,13 +20,8 @@ router.post('/api/users/signup',
       .withMessage('Password must be between 4 and 20 characters'),
   ]
   ,
+  validateRequest,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    // console.log(JSON.stringify(errors))
-    if (!errors.isEmpty()) {
-      // console.log('errors.array(): ', errors.array())
-      throw new RequestValidationError(errors.array())
-    }
     const { email, password } = req.body;
     console.log('-----------------------------')
     console.log('email: ', email);
