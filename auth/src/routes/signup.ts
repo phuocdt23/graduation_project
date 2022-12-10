@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { BadRequestError } from './../errors/bad-request-error';
-import { RequestValidationError } from './../errors/request-validation-error';
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import { User } from '../models/user';
 import { validateRequest } from '../middlewares/validate-request';
 
@@ -48,7 +47,7 @@ router.post('/api/users/signup',
       jwt: userJwt
     }
 
-    return res.status(200).send({ result });
+    return res.status(201).send({ result });
 
 
   })
