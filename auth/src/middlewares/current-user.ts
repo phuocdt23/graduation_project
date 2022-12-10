@@ -1,4 +1,3 @@
-import { UnauthorizedError } from './../errors/unauthorized-error';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 interface UserPayload {
@@ -13,23 +12,20 @@ declare global {
   }
 }
 
-export const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
+export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.session?.jwt) {
-    // throw new UnauthorizedError();
     next();
   }
 
   try {
-    const payload = jwt.verify(req.session!.jwt, process.env.JWT_KEY!);
-    if (!payload) throw new UnauthorizedError();
-
-    req.currentUser = payload as UserPayload;
-    next();
+    const payload = jwt.verify(req.session!.jwt, process.env.JWT_KEY!) as UserPayload;
+    req.currentUser = payload;
 
   } catch (error) {
-    throw new UnauthorizedError();
+    console.error(error);
   }
-
+  next();
+};
 
 
 
