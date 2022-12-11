@@ -22,12 +22,12 @@ router.post('/api/users/signup',
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    console.log('-----------------------------')
-    console.log('email: ', email);
-    console.log('password: ', password);
-    console.log('-----------------------------')
-    console.log('Creating a user...');
-    console.log('Check if existing user\n');
+    // console.log('-----------------------------')
+    // console.log('email: ', email);
+    // console.log('password: ', password);
+    // console.log('-----------------------------')
+    // console.log('Creating a user...');
+    // console.log('Check if existing user\n');
     const user = await User.findOne({ email });
     if (user) {
       throw new BadRequestError('Email already in use')
