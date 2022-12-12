@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { app } from "./app";
-import { DatabaseConnectionError } from "./errors/database-connection-error";
+import { DatabaseConnectionError } from "@phuoc.dt182724/common";
 
 const start = async () => {
   try {

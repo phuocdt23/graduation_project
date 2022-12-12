@@ -1,5 +1,5 @@
 import express, { Response, Request } from 'express';
-import { currentUser } from './../middlewares/current-user';
+import { currentUser } from '@phuoc.dt182724/common'sss;
 const router = express.Router()
 
 router.get('/api/users/currentuser',

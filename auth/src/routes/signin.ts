@@ -2,9 +2,8 @@ import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import express from 'express';
 import { body } from 'express-validator';
-import { validateRequest } from './../middlewares/validate-request';
+import { validateRequest, BadRequestError } from '@phuoc.dt182724/common';
 import { User } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-error';
 import { Request, Response } from 'express';
 
 
