@@ -19,7 +19,6 @@ const start = async () => {
         })
       })
       .catch((err) => {
-        console.log(err)
         throw new DatabaseConnectionError();
       });
   } catch (error) {
