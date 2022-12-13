@@ -8,11 +8,11 @@ const start = async () => {
       throw new Error('JWT_KEY must be defined');
     }
 
-    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth')
+    await mongoose.connect('mongodb://tickets-mongo-srv:27017/tickets')
       .then(() => {
         console.log('connected to mongodb');
         app.listen(3000, () => {
-          console.log('Auth listening on port 3000')
+          console.log('Tickets listening on port 3000')
         })
       })
       .catch((err) => {

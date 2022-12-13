@@ -19,8 +19,16 @@ build:
     - image: phuocdt182724/client
       context: client
       docker:
-          dockerfile: Dockerfile
+        dockerfile: Dockerfile
       sync:
-          manual:
-            - src: '**/*.js'
-              dest: .
+        manual:
+          - src: "**/*.js"
+            dest: .
+    - image: phuocdt182724/tickets
+      context: tickets
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
