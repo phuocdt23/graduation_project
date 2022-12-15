@@ -7,6 +7,7 @@ import { json } from 'body-parser';
 import { errorHandler, NotFoundError, currentUser } from '@phuoc.dt182724/common';
 
 import { createTicketRouter } from './routes/create-ticket';
+import { showTicket } from './routes/show-ticket';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieSession({
 
 app.use(currentUser);
 app.use(createTicketRouter);
+app.use(showTicket);
 
 app.all('*', async (req: Request, res: Response) => {
   throw new NotFoundError();
