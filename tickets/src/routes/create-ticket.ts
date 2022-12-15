@@ -1,6 +1,7 @@
 import { body } from 'express-validator';
 import express, { Response, Request } from 'express';
 import { requireAuth, validateRequest } from '@phuoc.dt182724/common';
+import { Ticket } from '../../models/ticket';
 const router = express.Router()
 
 router.post('/api/tickets',
@@ -20,7 +21,11 @@ router.post('/api/tickets',
   ],
   validateRequest,
   (req: Request, res: Response) => {
-    res.sendStatus(201);
+    const { title, price } = req.body;
+
+    const ticket = Ticket.build({ title, price, userId: req.currentUser!.id });
+    ticket.save();
+    return res.status(201).send(ticket);
   })
 
 
