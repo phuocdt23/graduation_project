@@ -8,6 +8,7 @@ import { errorHandler, NotFoundError, currentUser } from '@phuoc.dt182724/common
 
 import { createTicketRouter } from './routes/create-ticket';
 import { showTicket } from './routes/show-ticket';
+import { updateTicket } from './routes/update-ticket';
 
 const app = express();
 
@@ -17,10 +18,13 @@ app.use(cookieSession({
   signed: false,
   secure: true
 }));
-
+//get current user middleware
 app.use(currentUser);
+
 app.use(createTicketRouter);
 app.use(showTicket);
+app.use(updateTicket);
+
 
 app.all('*', async (req: Request, res: Response) => {
   throw new NotFoundError();
