@@ -1,9 +1,10 @@
+// import { errorHandler, NotFoundError, currentUser } from './../../common/src/index';
 
 import cookieSession from 'cookie-session';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
-import { errorHandler, NotFoundError } from '@phuoc.dt182724/common';
+import { errorHandler, NotFoundError, currentUser } from '@phuoc.dt182724/common';
 
 import { createTicketRouter } from './routes/create-ticket';
 
@@ -16,9 +17,10 @@ app.use(cookieSession({
   secure: true
 }));
 
+app.use(currentUser);
 app.use(createTicketRouter);
 
-app.all('*', async (req, res) => {
+app.all('*', async (req: Request, res: Response) => {
   throw new NotFoundError();
 });
 //error handling:
