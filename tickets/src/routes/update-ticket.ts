@@ -30,11 +30,11 @@ router.put('/api/tickets/:id',
       throw new UnauthorizedError();
     }
 
-    title.set({ title, price });
+    ticket.set({ title, price });
     await ticket.save();
 
 
-    res.send(ticket);
+    res.status(200).send(ticket);
   }
 )
 

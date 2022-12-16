@@ -3,18 +3,18 @@ import mongoose from 'mongoose';
 import request from 'supertest'
 import { app } from '../../app'
 
-it('returns a 404 if the provided id is not exist'), async () => {
+it('returns a 404 if the provided id is not exist', async () => {
+  const id = new mongoose.Types.ObjectId().toHexString();
   await request(app)
-    .put(`/api/tickets/${new mongoose.Types.ObjectId().toHexString()}`)
+    .put(`/api/tickets/${id}`)
     .set('Cookie', global.signin())
     .send({
-      title: faker.commerce.productName,
-      price: faker.commerce.price
+      title: faker.commerce.productName(),
+      price: faker.commerce.price()
     })
     .expect(404);
-}
-
-it('returns a 401 if the user is not authenticated'), async () => {
+})
+it('returns a 401 if the user is not authenticated', async () => {
   await request(app)
     .put(`/api/tickets/${new mongoose.Types.ObjectId().toHexString()}`)
     .send({
@@ -22,18 +22,31 @@ it('returns a 401 if the user is not authenticated'), async () => {
       price: faker.commerce.price
     })
     .expect(401);
-}
-it('returns a 401 if the user does not own the ticket'), async () => {
-  // await request(app)
-  //   .put(`/api/tickets/${new mongoose.Types.ObjectId().toHexString()}`)
-  //   .send({
-  //     title: faker.commerce.productName,
-  //     price: faker.commerce.price
-  //   })
-  //   .expect(401);
+})
+it('returns a 401 if the user does not own the ticket', async () => {
+  const newTitle = 'new title';
+  const newPrice = 10;
+  const response = await request(app)
+    .post('/api/tickets')
+    .set('Cookie', global.signin())
+    .send({
+      title: faker.commerce.productName(),
+      price: faker.commerce.price()
+    })
 
-}
-it('returns a 400 if the user provides an invalid title or price'), async () => {
+  console.log('response.body: ', response.body)
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', global.signin())
+    .send({
+      title: newTitle,
+      price: newPrice
+    })
+    .expect(401)
+
+})
+it('returns a 400 if the user provides an invalid title or price', async () => {
   const cookie = global.signin();
 
   const response = await request(app)
@@ -61,8 +74,8 @@ it('returns a 400 if the user provides an invalid title or price'), async () => 
       price: -10
     })
     .expect(400)
-}
-it('returns a 404 if the provided id is not exist'), async () => {
+})
+it('returns a 404 if the provided id is not exist', async () => {
   const newTitle = 'new title';
   const newPrice = 10;
   const cookie = global.signin();
@@ -71,8 +84,8 @@ it('returns a 404 if the provided id is not exist'), async () => {
     .post('/api/tickets')
     .set('Cookie', cookie)
     .send({
-      title: faker.commerce.productName,
-      price: faker.commerce.price
+      title: faker.commerce.productName(),
+      price: faker.commerce.price()
     })
 
   await request(app)
@@ -88,6 +101,6 @@ it('returns a 404 if the provided id is not exist'), async () => {
     .get(`/api/tickets/${response.body.id}`)
     .send();
 
-  expect(ticketResponse.body.title).toEqual(newTitle)
-  expect(ticketResponse.body.price).toEqual(newPrice)
-}
+  expect(ticketResponse.body.ticket.title).toEqual(newTitle)
+  expect(ticketResponse.body.ticket.price).toEqual(newPrice)
+})
