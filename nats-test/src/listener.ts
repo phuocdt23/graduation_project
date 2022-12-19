@@ -1,20 +1,20 @@
 import { randomBytes } from 'crypto';
-import nats, { Message } from 'node-nats-streaming';
+import nats, { Message, Stan } from 'node-nats-streaming';
+import { CreateTicketListner } from './event/ticket-created-listener';
+
 
 console.clear();
 const stan = nats.connect('ticketing', randomBytes(4).toString('hex'), {
   url: 'http://localhost:4222',
 });
 
+stan.on('connect', () => {
+  console.log('Listener connected! to NATS');
 
-stan.on('connect',
-  () => {
-    console.log('Listener connected NATS!');
-
-    const subscription = stan.subscribe('ticket:created', 'order-service-queue-group');
-
-
-    subscription.on('message', (msg: Message) => {
-      console.log(`Received event #${msg.getSequence()} with data: ${msg.getData()}`);
-    })
+  stan.on('close', () => {
+    console.log('NATS connection closed!');
   })
+  new CreateTicketListner(stan).listen();
+});
+
+
