@@ -1,7 +1,9 @@
+import { natsWapper } from './../nats-wrapper';
 import { NotFoundError, requireAuth, UnauthorizedError, validateRequest } from '@phuoc.dt182724/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../../models/ticket';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 
 const router = express.Router();
 
@@ -32,6 +34,13 @@ router.put('/api/tickets/:id',
 
     ticket.set({ title, price });
     await ticket.save();
+
+    await new TicketUpdatedPublisher(natsWapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    })
 
 
     res.status(200).send(ticket);
