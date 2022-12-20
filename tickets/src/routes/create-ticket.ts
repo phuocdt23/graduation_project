@@ -1,7 +1,9 @@
+import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
 import { body } from 'express-validator';
 import express, { Response, Request } from 'express';
 import { requireAuth, validateRequest } from '@phuoc.dt182724/common';
 import { Ticket } from '../../models/ticket';
+import { natsWapper } from '../nats-wrapper';
 const router = express.Router()
 
 router.post('/api/tickets',
@@ -16,11 +18,19 @@ router.post('/api/tickets',
       .withMessage('Price must be a number and greater than 0'),
   ],
   validateRequest,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const { title, price } = req.body;
 
     const ticket = Ticket.build({ title, price, userId: req.currentUser!.id });
-    ticket.save();
+    await ticket.save();
+
+
+    await new TicketCreatedPublisher(natsWapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    });
     return res.status(201).send(ticket);
   })
 

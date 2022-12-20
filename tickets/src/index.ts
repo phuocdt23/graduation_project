@@ -1,3 +1,4 @@
+import { natsWapper } from './nats-wrapper';
 import mongoose from "mongoose";
 import { app } from "./app";
 import { DatabaseConnectionError } from "@phuoc.dt182724/common";
@@ -10,7 +11,16 @@ const start = async () => {
     if (!process.env.MONGO_URI) {
       throw new Error('MONGO_URI must be defined');
     }
-
+    
+    await natsWapper.connect('ticketing', 'randomstring', 'http://nats-srv:4222');
+    natsWapper.client.on('close', () => {
+      console.log('NATS connection closed!');
+      process.exit();
+    });
+    process.on('SIGINT', () => natsWapper.client.close());
+    process.on('SIGTERM', () => natsWapper.client.close());
+    
+    mongoose.set('strictQuery', true)
     await mongoose.connect(process.env.MONGO_URI)
       .then(() => {
         console.log('connected to mongodb');
@@ -21,6 +31,7 @@ const start = async () => {
       .catch((err) => {
         throw new DatabaseConnectionError();
       });
+
   } catch (error) {
     console.log(error);
   }
