@@ -1,6 +1,6 @@
 import nats, { Stan } from 'node-nats-streaming';
 
-class NatsWapper {
+class NatsWrapper {
   private _client?: Stan;
 
   get client() {
@@ -12,10 +12,6 @@ class NatsWapper {
   }
   connect(clusterId: string, clientId: string, url: string) {
     this._client = nats.connect(clusterId, clientId, { url });
-
-
-    
-
 
     return new Promise<void>((resolve, reject) => {
       this._client!.on('connect', () => {
@@ -31,4 +27,4 @@ class NatsWapper {
   }
 
 }
-export const natsWapper = new NatsWapper();
+export const natsWrapper = new NatsWrapper();

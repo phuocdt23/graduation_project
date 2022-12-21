@@ -3,7 +3,7 @@ import { body } from 'express-validator';
 import express, { Response, Request } from 'express';
 import { requireAuth, validateRequest } from '@phuoc.dt182724/common';
 import { Ticket } from '../../models/ticket';
-import { natsWapper } from '../nats-wrapper';
+import { natsWrapper } from '../nats-wrapper';
 const router = express.Router()
 
 router.post('/api/tickets',
@@ -25,7 +25,7 @@ router.post('/api/tickets',
     await ticket.save();
 
 
-    await new TicketCreatedPublisher(natsWapper.client).publish({
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,

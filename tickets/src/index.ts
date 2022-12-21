@@ -1,4 +1,4 @@
-import { natsWapper } from './nats-wrapper';
+import { natsWrapper } from './nats-wrapper';
 import mongoose from "mongoose";
 import { app } from "./app";
 import { DatabaseConnectionError } from "@phuoc.dt182724/common";
@@ -21,16 +21,16 @@ const start = async () => {
       throw new Error('NATS_CLIENT_ID must be defined');
     }
 
-    await natsWapper.connect(
+    await natsWrapper.connect(
       process.env.NATS_CLUSTER_ID,
       process.env.NATS_CLIENT_ID,
       process.env.NATS_URL);
-    natsWapper.client.on('close', () => {
+    natsWrapper.client.on('close', () => {
       console.log('NATS connection closed!');
       process.exit();
     });
-    process.on('SIGINT', () => natsWapper.client.close());
-    process.on('SIGTERM', () => natsWapper.client.close());
+    process.on('SIGINT', () => natsWrapper.client.close());
+    process.on('SIGTERM', () => natsWrapper.client.close());
 
     mongoose.set('strictQuery', true)
     await mongoose.connect(process.env.MONGO_URI)

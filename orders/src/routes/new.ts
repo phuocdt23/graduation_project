@@ -1,5 +1,4 @@
-import { OrderCreatedEvent } from './../../../common/src/events/order-created-event';
-import { natsWapper } from './../../../tickets/src/nats-wrapper';
+import { natsWrapper } from '../nats-wrapper';
 import mongoose from "mongoose";
 import express, { Request, Response } from "express";
 import {
@@ -58,7 +57,7 @@ router.post(
     await order.save();
 
     // Publish an event saying that an order was created
-    await new OrderCreatedPublisher(natsWapper.client).publish({
+    await new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,
       status: order.status,
       userId: order.userId,

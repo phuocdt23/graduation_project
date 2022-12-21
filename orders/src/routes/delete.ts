@@ -1,5 +1,5 @@
 import { OrderCancelledPublisher } from './../events/publishers/order-cancelled-publisher';
-import { natsWapper } from './../../../tickets/src/nats-wrapper';
+import { natsWrapper } from '../nats-wrapper';
 import express, { Request, Response } from "express";
 import {
   requireAuth,
@@ -28,7 +28,7 @@ router.delete(
     await order.save();
 
     // publishing an event saying this was cancelled!
-    await new OrderCancelledPublisher(natsWapper.client).publish({
+    await new OrderCancelledPublisher(natsWrapper.client).publish({
       id: order.id,
       ticket: {
         id: order.ticket.id,
