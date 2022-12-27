@@ -41,7 +41,7 @@ build:
           - src: "src/**/*.ts"
             dest: .
     - image: phuocdt182724/expiration
-      context: orders
+      context: expiration
       docker:
         dockerfile: Dockerfile
       sync:
