@@ -30,7 +30,7 @@ router.post(
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
-      userId: ticket.userId,
+      ownerId: ticket.userId,
       version: ticket.version,
     });
 

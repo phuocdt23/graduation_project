@@ -37,6 +37,10 @@ router.post(
       throw new NotFoundError();
     }
 
+    if (ticket.ownerId === req.currentUser!.id) {
+      throw new BadRequestError("Cannot order your own ticket");
+    }
+
     // Make sure that this ticket is not already reserved
     const isReserved = await ticket.isReserved();
     if (isReserved) {
