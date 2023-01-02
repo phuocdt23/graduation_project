@@ -26,7 +26,6 @@ const setup = async () => {
   const data: ExpirationCompleteEvent["data"] = {
     orderId: order.id,
   };
-  
 
   // @ts-ignore
   const msg: Message = {

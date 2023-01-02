@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import {
   requireAuth,
   NotFoundError,
-  UnauthorizedError,
+  NotAuthorizedError,
 } from "@phuoc.dt182724/common";
 import { Order } from "../models/order";
 
@@ -18,7 +18,7 @@ router.get(
       throw new NotFoundError();
     }
     if (order.userId !== req.currentUser!.id) {
-      throw new UnauthorizedError();
+      throw new NotAuthorizedError();
     }
 
     res.send(order);

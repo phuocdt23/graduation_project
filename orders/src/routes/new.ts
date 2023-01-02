@@ -1,4 +1,3 @@
-import { natsWrapper } from '../nats-wrapper';
 import mongoose from "mongoose";
 import express, { Request, Response } from "express";
 import {
@@ -11,7 +10,8 @@ import {
 import { body } from "express-validator";
 import { Ticket } from "../models/ticket";
 import { Order } from "../models/order";
-import { OrderCreatedPublisher } from '../events/publishers/order-created-publisher';
+import { OrderCreatedPublisher } from "../events/publishers/order-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -37,7 +37,7 @@ router.post(
       throw new NotFoundError();
     }
 
-    if (ticket.ownerId === req.currentUser!.id) {
+    if (req.currentUser!.id === ticket.userId) {
       throw new BadRequestError("Cannot order your own ticket");
     }
 

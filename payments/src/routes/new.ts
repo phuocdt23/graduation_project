@@ -4,7 +4,7 @@ import {
   requireAuth,
   validateRequest,
   BadRequestError,
-  UnauthorizedError,
+  NotAuthorizedError,
   NotFoundError,
   OrderStatus,
 } from "@phuoc.dt182724/common";
@@ -30,7 +30,7 @@ router.post(
       throw new NotFoundError();
     }
     if (order.userId !== req.currentUser!.id) {
-      throw new UnauthorizedError();
+      throw new NotAuthorizedError();
     }
     if (order.status === OrderStatus.Cancelled) {
       throw new BadRequestError("Cannot pay for an cancelled order");

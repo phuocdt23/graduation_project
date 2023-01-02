@@ -1,25 +1,28 @@
+import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
-import mongoose from "mongoose";
-import { Order, OrderStatus } from "./order";
+import { Order, OrderStatus } from './order';
 
 interface TicketAttrs {
   id: string;
   title: string;
   price: number;
-  ownerId: string;
+  userId: string;
 }
 
 export interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  userId: string;
   version: number;
-  ownerId: string;
   isReserved(): Promise<boolean>;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
-  findByEvent(event: { id: string, version: number }): Promise<TicketDoc | null>;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -33,8 +36,9 @@ const ticketSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    ownerId: {
+    userId: {
       type: String,
+      required: true,
     }
   },
   {
@@ -47,28 +51,27 @@ const ticketSchema = new mongoose.Schema(
   }
 );
 
-ticketSchema.set('versionKey', 'version')
+ticketSchema.set('versionKey', 'version');
 ticketSchema.plugin(updateIfCurrentPlugin);
 
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket({
     _id: attrs.id,
     title: attrs.title,
     price: attrs.price,
-    ownerId: attrs.ownerId,
+    userId: attrs.userId
   });
 };
-ticketSchema.statics.findByEvent = (event: { id: string, version: number }) => {
-  return Ticket.findOne({
-    _id: event.id,
-    version: event.version - 1
-  });
-};
-
 ticketSchema.methods.isReserved = async function () {
   // this === the ticket document that we just called 'isReserved' on
   const existingOrder = await Order.findOne({
-    ticket: this,
+    ticket: this as any,
     status: {
       $in: [
         OrderStatus.Created,
@@ -81,6 +84,6 @@ ticketSchema.methods.isReserved = async function () {
   return !!existingOrder;
 };
 
-const Ticket = mongoose.model<TicketDoc, TicketModel>("Ticket", ticketSchema);
+const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
 
 export { Ticket };

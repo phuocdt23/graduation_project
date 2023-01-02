@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: phuocdt182724/client
+          image: phuocdt182724/ticketing-client
 ---
 apiVersion: v1
 kind: Service

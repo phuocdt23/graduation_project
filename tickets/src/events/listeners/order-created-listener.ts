@@ -23,7 +23,7 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     // Save the ticket
     await ticket.save();
     await new TicketUpdatedPublisher(this.client).publish({
-      id: ticket._id,
+      id: ticket.id,
       price: ticket.price,
       title: ticket.title,
       userId: ticket.userId,

@@ -4,7 +4,7 @@ import {
   validateRequest,
   NotFoundError,
   requireAuth,
-  UnauthorizedError,
+  NotAuthorizedError,
   BadRequestError,
 } from "@phuoc.dt182724/common";
 import { Ticket } from "../models/ticket";
@@ -35,7 +35,7 @@ router.put(
     }
 
     if (ticket.userId !== req.currentUser!.id) {
-      throw new UnauthorizedError();
+      throw new NotAuthorizedError();
     }
 
     ticket.set({

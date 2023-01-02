@@ -1,13 +1,10 @@
-import express, { Response, Request } from 'express';
-import { currentUser } from '@phuoc.dt182724/common';
-const router = express.Router()
+import express from "express";
+import { currentUser } from "@phuoc.dt182724/common";
 
-router.get('/api/users/currentuser',
-  currentUser
-  , (req: Request, res: Response) => {
-    res.send({ currentUser: req.currentUser || null })
-  })
+const router = express.Router();
 
+router.get("/api/users/currentuser", currentUser, (req, res) => {
+  res.send({ currentUser: req.currentUser || null });
+});
 
 export { router as currentUserRouter };
-
