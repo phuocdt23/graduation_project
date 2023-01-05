@@ -1,14 +1,15 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
-import jwt from "jsonwebtoken";
-import { validateRequest, BadRequestError } from "@phuoc.dt182724/common";
+import { validateRequest, BadRequestError, requireAuth, currentUser } from "@phuoc.dt182724/common";
 
 import { User } from "../models/user";
 
 const router = express.Router();
 
-router.post(
+router.patch(
   "/api/users/update",
+  currentUser,
+  requireAuth,
   [
     body("phoneNumber").isString().withMessage("Phone number must be valid"),
     body("name").not().isEmpty().withMessage("Name is required"),
@@ -19,35 +20,20 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { name, age, phoneNumber } = req.body;
+    console.log(name, age, phoneNumber);
+    const user = await User.findOne({ email: req.currentUser!.email });
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      throw new BadRequestError("Email in use");
+    if (!user) {
+      throw new BadRequestError("User not found");
     }
+    user.name = name;
+    user.phoneNumber = phoneNumber;
+    user.age = age;
 
-    const user = User.build({ name, age, phoneNumber, email, password });
     await user.save();
 
-    // Generate JWT
-    const userJwt = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        age: user.age,
-        phoneNumber: user.phoneNumber,
-      },
-      process.env.JWT_KEY!
-    );
-
-    // Store it on session object
-    req.session = {
-      jwt: userJwt,
-    };
-
-    res.status(201).send(user);
+    res.status(200).send(user);
   }
 );
 
-export { router as signupRouter };
+export { router as updateUserRouter };

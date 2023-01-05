@@ -2,18 +2,14 @@ import { useState, useEffect } from "react";
 import Router from "next/router";
 import useRequest from "../../hooks/use-request";
 
-const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const UpdateInfo = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const { doRequest, errors } = useRequest({
-    url: "/api/users/signup",
-    method: "post",
+    url: "/api/users/update",
+    method: "patch",
     body: {
-      email,
-      password,
       name,
       age,
       phoneNumber,
@@ -29,9 +25,9 @@ const Signup = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <h1>Sign Up</h1>
+      <h1>Update Info</h1>
       <div className="form-group">
-        <label>Name</label>
+        <label>New Name</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -39,7 +35,7 @@ const Signup = () => {
         />
       </div>
       <div className="form-group">
-        <label>Age</label>
+        <label>New Age</label>
         <input
           value={age}
           onChange={(e) => setAge(e.target.value)}
@@ -47,34 +43,17 @@ const Signup = () => {
         />
       </div>
       <div className="form-group">
-        <label>Phone Number</label>
+        <label>New Phone Number</label>
         <input
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="form-control"
         />
       </div>
-      <div className="form-group">
-        <label>Email Address</label>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label>Password</label>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          className="form-control"
-        />
-      </div>
       {errors}
-      <button className="btn btn-primary">Sign Up</button>
+      <button className="btn btn-primary">Update</button>
     </form>
   );
 };
 
-export default Signup;
+export default UpdateInfo;
