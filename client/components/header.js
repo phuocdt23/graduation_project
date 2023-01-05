@@ -8,6 +8,7 @@ const Header = ({ currentUser }) => {
     currentUser && { label: "My Orders", href: "/orders" },
     currentUser && { label: "Sign Out", href: "/auth/signout" },
     currentUser && { label: "Update Info", href: "/auth/updateUser" },
+    currentUser && { label: "Change Password", href: "/auth/changePassword" },
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, href }) => {
