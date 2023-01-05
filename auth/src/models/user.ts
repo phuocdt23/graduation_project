@@ -4,6 +4,9 @@ import { Password } from '../services/password';
 // An interface that describes the properties
 // that are requried to create a new User
 interface UserAttrs {
+  name: string;
+  age: number;
+  phoneNumber: string;
   email: string;
   password: string;
 }
@@ -17,6 +20,9 @@ interface UserModel extends mongoose.Model<UserDoc> {
 // An interface that describes the properties
 // that a User Document has
 interface UserDoc extends mongoose.Document {
+  name: string;
+  age: number;
+  phoneNumber: string;
   email: string;
   password: string;
 }
@@ -30,7 +36,19 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
-    }
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    age: {
+      type: Number,
+      required: true
+    },
+    phoneNumber: {
+      type: String,
+      required: true
+    },
   },
   {
     toJSON: {
@@ -44,9 +62,10 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre('save', async function(done) {
+userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
     const hashed = await Password.toHash(this.get('password'));
+    console.log('hashed: ' + hashed);
     this.set('password', hashed);
   }
   done();
