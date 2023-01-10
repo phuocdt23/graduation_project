@@ -4,6 +4,7 @@ import useRequest from "../../hooks/use-request";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
+  const [success, setSuccess] = useState(null);
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [age, setAge] = useState(null);
@@ -18,7 +19,18 @@ const Signup = () => {
       age,
       phoneNumber,
     },
-    onSuccess: () => Router.push("/"),
+    onSuccess: () => {
+      setSuccess(
+        <div className="alert alert-success">
+          <h4>Create Account Successfully</h4>
+        </div>)
+      setEmail("");
+      setPassword("");
+      setName("");
+      setAge("");
+      setPhoneNumber("");
+      setTimeout(() => { Router.push("/auth/signin") }, 5000);
+    },
   });
 
   const onSubmit = async (event) => {
@@ -72,6 +84,7 @@ const Signup = () => {
         />
       </div>
       {errors}
+      {success}
       <button className="btn btn-primary">Sign Up</button>
     </form>
   );
