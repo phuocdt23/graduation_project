@@ -11,11 +11,12 @@ router.post(
   "/api/users/signup",
   [
     body("email").isEmail().withMessage("Email must be valid"),
-    body("phoneNumber").isString().withMessage("Phone number must be valid"),
+    body("phoneNumber").isMobilePhone('vi-VN').withMessage("phone number must be vietnamese phone number"),
+    body("name").not().isNumeric().withMessage("Name is not a number"),
     body("name").not().isEmpty().withMessage("Name is required"),
     body("age")
-      .isInt({ gt: 0 })
-      .withMessage("Age must be greater than 0"),
+      .isInt({ gt: 18 })
+      .withMessage("Age must be greater than 18"),
     body("password")
       .trim()
       .isLength({ min: 4, max: 20 })
@@ -33,24 +34,24 @@ router.post(
     }
 
     const user = User.build({ name, age, phoneNumber, email, password });
-    const rs = await user.save();
+    await user.save();
 
     // Generate JWT
-    const userJwt = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        age: user.age,
-        phoneNumber: user.phoneNumber,
-      },
-      process.env.JWT_KEY!
-    );
+    // const userJwt = jwt.sign(
+    //   {
+    //     id: user.id,
+    //     email: user.email,
+    //     name: user.name,
+    //     age: user.age,
+    //     phoneNumber: user.phoneNumber,
+    //   },
+    //   process.env.JWT_KEY!
+    // );
 
-    // Store it on session object
-    req.session = {
-      jwt: userJwt,
-    };
+    // // Store it on session object
+    // req.session = {
+    //   jwt: userJwt,
+    // };
 
     res.status(201).send(user);
   }
