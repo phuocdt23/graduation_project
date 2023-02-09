@@ -33,6 +33,12 @@ router.post(
       throw new BadRequestError("Email in use");
     }
 
+    const existingNumber = await User.findOne({ phoneNumber });
+
+    if (existingNumber) {
+      throw new BadRequestError("Phone number in use");
+    }
+
     const user = User.build({ name, age, phoneNumber, email, password });
     await user.save();
 

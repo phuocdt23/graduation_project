@@ -26,6 +26,11 @@ router.patch(
     if (!user) {
       throw new BadRequestError("User not found");
     }
+    const existingNumber = await User.findOne({ phoneNumber });
+
+    if (existingNumber) {
+      throw new BadRequestError("Phone number in use");
+    }
     user.name = name;
     user.phoneNumber = phoneNumber;
     user.age = age;
